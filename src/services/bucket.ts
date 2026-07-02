@@ -75,7 +75,7 @@ export class BucketRouteServices {
     const bucketRepo = main_db.getRepository(Buckets);
     const bucket = await this.BucketValidation.checkBucketExists(bucketRepo, bucketName, { relations: ['files'] });
     this.BucketValidation.checkBucketEmpty(bucket as Buckets);
-    
+
     await MinIOClient.removeBucket(bucketName);
 
     return await SqliteHandle(bucketRepo, async (repo) => {
@@ -120,5 +120,12 @@ export class BucketRouteServices {
     return {bucketName, deletedFiles: objectsToDelete}
 
     // Delete all file records from database
+  }
+  async bucketList() {
+    const bucketRepo = main_db.getRepository(Buckets)
+    const buckets = await SqliteHandle(bucketRepo, async(repo) => {
+      return await repo.find()
+    })
+    return buckets.map((data) => data.name)
   }
 }

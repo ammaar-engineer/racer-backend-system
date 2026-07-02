@@ -17,7 +17,6 @@ bucket.post('/create', TryCatchController(async ({req, res, next}) => {
     
     SuccessResponse(res, {
         message: 'Bucket created successfully',
-        data
     })
 }, {isAsync: true}))
 
@@ -43,6 +42,14 @@ bucket.delete('/clear', TryCatchController(async ({res, req}) => {
     
     SuccessResponse(res, {
         message: `Bucket ${bucketName} cleared successfully`
+    })
+}, {isAsync: true}))
+
+bucket.get("/list", TryCatchController(async({res}) => {
+    const bucket = await bucketService.bucketList()
+    SuccessResponse(res, {
+        message: 'Success',
+        data: bucket
     })
 }, {isAsync: true}))
 

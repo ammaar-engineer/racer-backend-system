@@ -36,9 +36,9 @@ export class FileRouteServices {
     const passThroughStream = new PassThrough();
     req.pipe(passThroughStream);
     // Debug stream
-    passThroughStream.on('data', (chunk) => {
-      console.log(chunk.toString())
-    })
+    // passThroughStream.on('data', (chunk) => {
+    //   console.log(chunk.toString())
+    // })
 
     try {
 

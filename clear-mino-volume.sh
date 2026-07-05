@@ -1,0 +1,1 @@
+sudo docker volume rm backend_minio_data

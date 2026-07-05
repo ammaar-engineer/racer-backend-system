@@ -2,8 +2,8 @@ import express from 'express'
 import { TryCatchController } from '../utilities/trycatch.wrapper.js'
 import { superStructValidation } from '../utilities/superstruct.validation.js'
 import { object, size, string } from 'superstruct'
-import { SuccessResponse } from '../utilities/success.send.js'
-import { BucketRouteServices } from '../services/bucket.js'
+import { SuccessResponse } from '../utilities/sendSucessResponse.js'
+import { BucketRouteServices } from '../services/bucket_services.js'
 
 export const bucket = express.Router()
 const bucketService = new BucketRouteServices()
@@ -38,7 +38,7 @@ bucket.delete('/clear', TryCatchController(async ({res, req}) => {
         bucketName: string()
     }), req.query)
     
-    const data = await bucketService.clearBucket(bucketName)
+    await bucketService.clearBucket(bucketName)
     
     SuccessResponse(res, {
         message: `Bucket ${bucketName} cleared successfully`

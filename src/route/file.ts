@@ -1,9 +1,9 @@
 import express from "express";
 import { TryCatchController } from "../utilities/trycatch.wrapper.js";
-import { SuccessResponse } from "../utilities/success.send.js";
+import { SuccessResponse } from "../utilities/sendSucessResponse.js";
 import { superStructValidation } from "../utilities/superstruct.validation.js";
 import { object, string, size, type } from "superstruct";
-import { FileRouteServices } from "../services/file.js";
+import { FileRouteServices } from "../services/file_services.js";
 
 
 export const file = express.Router();

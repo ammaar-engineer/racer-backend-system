@@ -19,19 +19,19 @@ services:
           memory: 512M
 
   # Set policy otomatis
-  MinIO-Init:
-    image: minio/mc
-    container_name: "minio-init-container"
-    depends_on:
-      - MinIO
-    entrypoint: >
-      /bin/sh -c "
-      until (/usr/bin/mc alias set autominio http://MinIO:9000 minioadmin minioadmin123) do echo 'Waiting for MinIO API...' && sleep 1; done;
-      /usr/bin/mc mb autominio/archbucket || true;
-      /usr/bin/mc anonymous set download autominio/archbucket;
-      echo 'Policy archbucket berhasil di-set ke public!';
-      exit 0;
-      "
+  # MinIO-Init:
+  #   image: minio/mc
+  #   container_name: "minio-init-container"
+  #   depends_on:
+  #     - MinIO
+  #   entrypoint: >
+  #     /bin/sh -c "
+  #     until (/usr/bin/mc alias set autominio http://MinIO:9000 minioadmin minioadmin123) do echo 'Waiting for MinIO API...' && sleep 1; done;
+  #     /usr/bin/mc mb autominio/archbucket || true;
+  #     /usr/bin/mc anonymous set download autominio/archbucket;
+  #     echo 'Policy archbucket berhasil di-set ke public!';
+  #     exit 0;
+  #     "
 
 volumes:
   minio_data:

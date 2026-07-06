@@ -13,7 +13,7 @@ bucket.post('/create', TryCatchController(async ({req, res, next}) => {
         bucketName: size(string(), 3, 15)
     }), req.body)
     
-    const data = await bucketService.createBucket(bucketName)
+    await bucketService.createBucket(bucketName)
     
     SuccessResponse(res, {
         message: 'Bucket created successfully',
@@ -24,7 +24,6 @@ bucket.delete('/delete', TryCatchController(async ({req, res, next}) => {
     const {bucketName} = superStructValidation(object({
         bucketName: string()
     }), req.query)
-    console.log(req.query)
     
     await bucketService.deleteBucket(bucketName)
     

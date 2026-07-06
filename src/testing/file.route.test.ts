@@ -7,30 +7,31 @@ import { Readable } from 'stream'
 export function FileRouteTest(app: ReturnType<typeof express>) {
     describe("File route - Success cases", () => {
         it("POST /file/upload - Upload file with valid headers and stream", async () => {
-            fetch("https://localhost:3000/bucket/create", {
+            await fetch("http://localhost:3000/bucket/create", {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({bucketName: 'archbucket'})
-            }).then(async () => {
-                console.log("File upload test")
-                const testFileContent = Buffer.from('test file content')
-                const fileName = 'test-file.txt'
-                const bucketName = 'archbucket'
-                const contentType = 'text/plain'
-
-                const res = await request(app)
-                    .post("/file/upload")
-                    .set('x-file-name', fileName)
-                    .set('x-bucket-name', bucketName)
-                    .set('content-type', contentType)
-                    .send(testFileContent)
-
-
-                expect(res.status).to.equal(200)
-                expect(res.body).to.have.property("message")
-                expect(res.body.message).to.equal("File uploaded successfully")
-                expect(res.body).to.have.property("data")
-                expect(res.body.data).to.have.property("url")
             })
+
+            const testFileContent = Buffer.from('test file content')
+            const fileName = 'test-file.txt'
+            const bucketName = 'archbucket'
+            const contentType = 'text/plain'
+
+            const res = await request(app)
+                .post("/file/upload")
+                .set('x-file-name', fileName)
+                .set('x-bucket-name', bucketName)
+                .set('content-type', contentType)
+                .send(testFileContent)
+
+            expect(res.status).to.equal(200)
+            expect(res.body).to.have.property("message")
+            expect(res.body.message).to.equal("File uploaded successfully")
+            expect(res.body).to.have.property("data")
+            expect(res.body.data).to.have.property("url")
         })
         it("GET /file/download - Download file with valid parameters", async () => {
                 const bucketName = 'archbucket'
@@ -39,9 +40,6 @@ export function FileRouteTest(app: ReturnType<typeof express>) {
                 const res = await request(app)
                     .get("/file/download")
                     .query({ bucketName, fileName })
-
-                console.log(res.error)
-
                 expect(res.status).to.equal(200)
                 expect(res.body).to.have.property("message")
                 expect(res.body.message).to.equal("File downloaded")

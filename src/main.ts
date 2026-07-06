@@ -27,7 +27,7 @@ console.log(process.env.MINIO_ACCESS_KEY, process.env.MINIO_SECRET_KEY)
 export const MinIOClient = new Client({
   endPoint: 'localhost',
   port: 9000,
-  useSSL: true,
+  useSSL: false,
   accessKey: process.env.MINIO_ACCESS_KEY as string,
   secretKey: process.env.MINIO_SECRET_KEY as string,
   region: 'us-east-1'
@@ -60,6 +60,10 @@ FileErrorTest(app)
 
 app.use(ErrorMiddleware());
 
-https.createServer(option, app).listen(3000, () => {
-  console.log("Server listening now")
+app.listen(3000, () => {
+  console.log(`Now server running`)
 })
+
+// https.createServer(option, app).listen(3000, () => {
+//   console.log("Server listening now")
+// })

@@ -105,7 +105,6 @@ export class FileRouteServices {
   }
 
   async deleteFile(fileName: string, bucketName: string) {
-    console.log('data valid file: ',  fileName, bucketName)
     const bucketRepo = main_db.getRepository(Buckets);
     const fileRepo = main_db.getRepository(Files);
     

@@ -18,7 +18,7 @@ services:
         limits:
           memory: 512M
 
-  # Tambahkan ini di bawahnya ngab, untuk otomatisasi policy tiap kali docker nyala
+  # Set policy otomatis
   MinIO-Init:
     image: minio/mc
     container_name: "minio-init-container"

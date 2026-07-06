@@ -11,9 +11,10 @@ import { snippet } from "./route/snippet.js";
 import { EnvVariable } from './utilities/envStatus.js';
 import path from 'path';
 import os from 'os'
-import https from 'https'
+// import https from 'https'
 import { SnippetErrorTest, SnippetRouteTest } from './testing/snippet.route.test.js';
 import { FileErrorTest, FileRouteTest } from './testing/file.route.test.js';
+import { BucketErrorTest, BucketRouteTest } from './testing/bucket.route.test.js';
 
 // Storage / Database
 export const main_db = new DataSource({
@@ -23,7 +24,6 @@ export const main_db = new DataSource({
   entities: [Snippets, Buckets, Files],
 });
 await main_db.initialize();
-console.log(process.env.MINIO_ACCESS_KEY, process.env.MINIO_SECRET_KEY)
 export const MinIOClient = new Client({
   endPoint: 'localhost',
   port: 9000,
@@ -50,12 +50,16 @@ app.use('/bucket', bucket);
 app.use('/snippet', snippet)
 
 // Snippet test
-SnippetRouteTest(app)
-SnippetErrorTest(app)
+// SnippetRouteTest(app)
+// SnippetErrorTest(app)
 
 // File test
-FileRouteTest(app)
-FileErrorTest(app)
+// FileRouteTest(app)
+// FileErrorTest(app)
+
+// Bucket test
+BucketRouteTest(app)
+BucketErrorTest(app)
 
 
 app.use(ErrorMiddleware());

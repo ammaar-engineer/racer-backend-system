@@ -56,7 +56,7 @@ file.get('/download', TryCatchController(async({req, res, next}) => {
   SuccessResponse(res, {
     message: 'File downloaded',
     data: {
-      url
+      url: rawUrl
     }
   })
 

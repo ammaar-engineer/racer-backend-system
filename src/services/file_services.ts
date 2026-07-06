@@ -105,7 +105,7 @@ export class FileRouteServices {
   }
 
   async deleteFile(fileName: string, bucketName: string) {
-    console.log("Jalan")
+    console.log(fileName, bucketName)
     const bucketRepo = main_db.getRepository(Buckets);
     const fileRepo = main_db.getRepository(Files);
     
@@ -118,13 +118,15 @@ export class FileRouteServices {
       }
     });
 
-    console.log(file)
-
     if (!file) {
       ErrorTypeCall.notFound('File not found');
     }
 
-    await MinIOClient.removeObject(bucketName, fileName);
+    try {
+      await MinIOClient.removeObject(bucketName, fileName); 
+    } catch {
+      console.log("Penyebab masalah EPROTO error")
+    }
     
     await SqliteHandle(fileRepo, async (repo) => {
       await repo.delete({name: file?.name});

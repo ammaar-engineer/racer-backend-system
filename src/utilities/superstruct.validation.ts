@@ -9,7 +9,13 @@ export function superStructValidation<S extends Struct<any, any>>(
     assert(value, structscheme);
     return value as Infer<S>;
   } catch (err: any) {
-    console.log(err, 'Ini penyebab nya')
-    throw ErrorTypeCall.badRequest(err?.message)
+    // Extract detailed validation errors from superstruct
+    const failures = err.failures ? err.failures() : [];
+    const errorMessages = failures.map((f: any) => 
+      `${f.path.join('.')}: ${f.message}`
+    ).join(', ');
+    
+    const message = errorMessages || err?.message || 'Validation failed';
+    throw ErrorTypeCall.badRequest(message);
   }
 }

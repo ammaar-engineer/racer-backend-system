@@ -10,8 +10,7 @@ export function BucketRouteTest(app: ReturnType<typeof express>) {
             const res = await request(app)
                 .post("/bucket/create")
                 .send({bucketName: "archbucket"})
-            
-            console.log(res.error, "Output res error pada: POST: Create a bucket tes")
+
             expect(res.status).to.equal(200)
             // expect(res.body.message).to.have("Bucket created successfully")
         })
@@ -66,7 +65,7 @@ export function BucketErrorTest(app: ReturnType<typeof express>) {
             const res = await request(app)
                 .post("/bucket/create")
                 .send({bucketName: 'archbucket'})
-            console.log(res.error)
+                
             expect(res.status).to.not.equal(200)
             expect(res.body).to.have.property("message")
         })

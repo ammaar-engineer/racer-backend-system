@@ -14,6 +14,8 @@ bucket.post('/create', TryCatchController(async ({req, res, next}) => {
     }), req.body)
     
     await bucketService.createBucket(bucketName)
+
+    console.log("REQUEST BUCKET MASUK", bucketName)
     
     SuccessResponse(res, {
         message: 'Bucket created successfully',

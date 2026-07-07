@@ -19,6 +19,13 @@ export function ErrorMiddleware() {
       err as unknown as error_structure;
 
     // EnvVariable('NODE_ENV') == 'development' ? console.log(err) : console.log()
+    console.log({
+      statusCode: statusCode || 500,
+      errorCode: errorCode || "INTERNAL_SERVER_ERROR",
+      success: success || false,
+      message: message || "Internal server error",
+      data: null,
+    })
     
     res.status(statusCode || 500).json({
       statusCode: statusCode || 500,

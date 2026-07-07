@@ -58,7 +58,7 @@ app.use('/snippet', snippet)
 // FileErrorTest(app)
 
 // Bucket test
-BucketRouteTest(app)
+// BucketRouteTest(app)
 BucketErrorTest(app)
 
 

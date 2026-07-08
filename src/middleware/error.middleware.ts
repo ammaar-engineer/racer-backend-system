@@ -15,18 +15,18 @@ export function ErrorMiddleware() {
     next: NextFunction,
   ) => {
     // Apa kita perlu menambahkan field error? biasa nya field ini berisi pesan list error dalam bentuk array
-    const { statusCode, errorCode, success, message, data } =
+    const { statusCode, errorCode, success, message } =
       err as unknown as error_structure;
 
     // EnvVariable('NODE_ENV') == 'development' ? console.log(err) : console.log()
-    console.log({
-      statusCode: statusCode || 500,
-      errorCode: errorCode || "INTERNAL_SERVER_ERROR",
-      success: success || false,
-      message: message || "Internal server error",
-      data: null,
-    })
-    
+    // console.log({
+    //   statusCode: statusCode || 500,
+    //   errorCode: errorCode || "INTERNAL_SERVER_ERROR",
+    //   success: success || false,
+    //   message: message || "Internal server error",
+    //   data: null,
+    // })
+
     res.status(statusCode || 500).json({
       statusCode: statusCode || 500,
       errorCode: errorCode || "INTERNAL_SERVER_ERROR",

@@ -47,6 +47,8 @@ file.get('/download', TryCatchController(async({req, res, next}) => {
     fileName: string()
   }), req.query)
 
+  console.log(req.query)
+
   const {url: rawUrl} = await fileService.downloadFile(bucketName, fileName)
   const url = rawUrl.replace(
     'localhost:9000',

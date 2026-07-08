@@ -19,7 +19,7 @@ export function BucketRouteTest(app: ReturnType<typeof express>) {
             const res = await request(app)
                 .delete("/bucket/delete")
                 .query({bucketName: "archbucket"})
-            
+            console.log(res.error)
             expect(res.status).to.equal(200)
             expect(res.body.message).to.have("Bucket archbucket deleted successfully")
         })
@@ -65,14 +65,14 @@ export function BucketErrorTest(app: ReturnType<typeof express>) {
             const res = await request(app)
                 .post("/bucket/create")
                 .send({bucketName: 'archbucket'})
-                
+
             expect(res.status).to.not.equal(200)
             expect(res.body).to.have.property("message")
         })
 
         it("DELETE: Delete bucket with invalid data", async () => {
             const res = await request(app)
-                .post("/bucket/delete")
+                .delete("/bucket/delete")
                 .query({bucketName: 'archbucket'})
 
             expect(res.status).to.not.equal(200)

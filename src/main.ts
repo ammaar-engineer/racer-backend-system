@@ -3,7 +3,6 @@ import express from "express";
 import { ErrorMiddleware } from "./middleware/error.middleware.js";
 import { DataSource } from "typeorm";
 import { Client } from "minio";
-import fs from 'fs'
 import { file } from "./route/file.js";
 import { bucket } from "./route/bucket.js";
 import { Buckets, Files, Snippets } from "./entity.js";
@@ -11,7 +10,7 @@ import { snippet } from "./route/snippet.js";
 import { EnvVariable } from './utilities/envStatus.js';
 import path from 'path';
 import os from 'os'
-// import https from 'https'
+import fs from 'fs'
 import { SnippetErrorTest, SnippetRouteTest } from './testing/snippet.route.test.js';
 import { FileErrorTest, FileRouteTest } from './testing/file.route.test.js';
 import { BucketErrorTest, BucketRouteTest } from './testing/bucket.route.test.js';
@@ -25,21 +24,22 @@ export const main_db = new DataSource({
 });
 await main_db.initialize();
 export const MinIOClient = new Client({
-  endPoint: 'localhost',
-  port: 9000,
+  endPoint: process.env.HOST_MINIO as string,
+  port: 80,
   useSSL: false,
   accessKey: process.env.MINIO_ACCESS_KEY as string,
   secretKey: process.env.MINIO_SECRET_KEY as string,
   region: 'us-east-1'
 })
 
-// Application / Routes
-const app = express();
-
+// Opsi sertifikat kalo mau SSH
 const option = {
   key: fs.readFileSync(path.join(os.homedir(), 'localCert', 'localhost+2-key.pem')),
-  cert: fs.readFileSync(path.join(os.homedir(), 'localCert', 'localhost+2.pem')),
+  cert: fs.readFileSync(path.join(os.homedir(), 'localCert', 'localhost+2.pem'))
 }
+
+// Application / Routes
+const app = express();
 
 // Middleware
 app.use(express.json());
@@ -59,7 +59,7 @@ app.use('/snippet', snippet)
 
 // Bucket test
 // BucketRouteTest(app)
-BucketErrorTest(app)
+// BucketErrorTest(app)
 
 
 app.use(ErrorMiddleware());
@@ -68,6 +68,7 @@ app.listen(3000, () => {
   console.log(`Now server running`)
 })
 
+// Untuk set ke https
 // https.createServer(option, app).listen(3000, () => {
 //   console.log("Server listening now")
 // })

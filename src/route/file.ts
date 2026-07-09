@@ -16,7 +16,7 @@ file.post('/upload', TryCatchController(async ({ req, res, next }) => {
       'x-bucket-name': size(string(), 1, Infinity),
       'content-type': string(),
       'content-length': string()
-    }), 
+    }),
     req.headers
   );
 
@@ -24,32 +24,32 @@ file.post('/upload', TryCatchController(async ({ req, res, next }) => {
   const bucketName = headers['x-bucket-name']
   const ContentType = headers['content-type']
   const fileSize = parseInt(headers['content-length'], 10)
-  
-  const {url} = await fileService.uploadFile(
+
+  const { url } = await fileService.uploadFile(
     req,
     fileName,
     bucketName,
     ContentType,
     fileSize
   )
-    
+
   SuccessResponse(res, {
     message: 'File uploaded successfully',
     data: {
       url
     }
   })
-}, {isAsync: true}))
+}, { isAsync: true }))
 
-file.get('/download', TryCatchController(async({req, res, next}) => {
-  const {bucketName, fileName} = superStructValidation(object({
+file.get('/download', TryCatchController(async ({ req, res, next }) => {
+  const { bucketName, fileName } = superStructValidation(object({
     bucketName: string(),
     fileName: string()
   }), req.query)
 
   console.log(req.query)
 
-  const {url: rawUrl} = await fileService.downloadFile(bucketName, fileName)
+  const { url: rawUrl } = await fileService.downloadFile(bucketName, fileName)
   const url = rawUrl.replace(
     'localhost:9000',
     'link ip VPS'
@@ -62,10 +62,10 @@ file.get('/download', TryCatchController(async({req, res, next}) => {
     }
   })
 
-}, {isAsync: true}))
+}, { isAsync: true }))
 
-file.delete('/delete', TryCatchController(async({req, res, next}) => {
-  const {fileName, bucketName} = superStructValidation(object({
+file.delete('/delete', TryCatchController(async ({ req, res, next }) => {
+  const { fileName, bucketName } = superStructValidation(object({
     fileName: string(),
     bucketName: string()
   }), req.query)
@@ -76,4 +76,4 @@ file.delete('/delete', TryCatchController(async({req, res, next}) => {
     message: 'File deleted'
   })
 
-}, {isAsync: true}))
+}, { isAsync: true }))

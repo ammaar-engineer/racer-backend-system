@@ -1,9 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, QueryFailedError } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Buckets, Files } from '../db/entities';
 import { BucketsValidation } from '../validation/buckets_validation';
-import { ConflictException } from '../CustomExceptionHandle';
+import { SqliteHandle } from '../utilities/typeorm.handle';
 import * as Minio from 'minio';
 
 @Injectable()
@@ -81,20 +81,15 @@ export class BucketsService {
     await this.minioClient.setBucketPolicy(bucketName, JSON.stringify(policy));
 
     // Save to database
-    try {
-      const newBucket = this.bucketRepo.create({ name: bucketName });
-      const savedBucket = await this.bucketRepo.save(newBucket);
+    const savedBucket = await SqliteHandle(this.bucketRepo, async (repo) => {
+      const newBucket = repo.create({ name: bucketName });
+      return await repo.save(newBucket);
+    });
 
-      return {
-        createdAt: savedBucket.createdAt,
-        name: savedBucket.name
-      };
-    } catch (err: any) {
-      if (err instanceof QueryFailedError && err.driverError?.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-        throw new ConflictException('Data already exist');
-      }
-      throw err;
-    }
+    return {
+      createdAt: savedBucket.createdAt,
+      name: savedBucket.name
+    };
   }
 
   /**
@@ -112,18 +107,13 @@ export class BucketsService {
     await this.minioClient.removeBucket(bucketName);
 
     // Remove from database
-    try {
-      await this.bucketRepo.remove(bucket);
+    await SqliteHandle(this.bucketRepo, async (repo) => {
+      await repo.remove(bucket);
+    });
 
-      return {
-        bucketName
-      };
-    } catch (err: any) {
-      if (err instanceof QueryFailedError && err.driverError?.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-        throw new ConflictException('Data already exist');
-      }
-      throw err;
-    }
+    return {
+      bucketName
+    };
   }
 
   /**
@@ -139,52 +129,46 @@ export class BucketsService {
     // Delete all objects from MinIO
     const objectsList = this.minioClient.listObjects(bucketName, '', true);
     const objectsToDelete: string[] = [];
-
-    for await (const obj of objectsList) {
-      if (obj.name) {
-        objectsToDelete.push(obj.name);
-      }
-    }
+    
+    objectsList.on('data', (file) => {
+      objectsToDelete.push(file.name as string)
+    })
+    
+    // for await (const obj of objectsList) {
+    //   if (obj.name) {
+    //     objectsToDelete.push(obj.name);
+    //   }
+    // }
 
     if (objectsToDelete.length > 0) {
       await this.minioClient.removeObjects(bucketName, objectsToDelete);
     }
 
     // Remove files from database
-    try {
+    await SqliteHandle(this.fileRepo, async (repo) => {
       const bucket = await this.bucketRepo.findOne({
         where: { name: bucketName },
         relations: { files: true }
       });
 
       if (bucket?.files) {
-        await this.fileRepo.remove(bucket.files);
+        await repo.remove(bucket.files);
       }
+    });
 
-      return {
-        bucketName,
-        deletedFiles: objectsToDelete
-      };
-    } catch (err: any) {
-      if (err instanceof QueryFailedError && err.driverError?.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-        throw new ConflictException('Data already exist');
-      }
-      throw err;
-    }
+    return {
+      bucketName,
+      deletedFiles: objectsToDelete
+    };
   }
 
   /**
    * List all buckets
    */
   async bucketList() {
-    try {
-      const buckets = await this.bucketRepo.find();
-      return buckets.map((data) => data.name);
-    } catch (err: any) {
-      if (err instanceof QueryFailedError && err.driverError?.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-        throw new ConflictException('Data already exist');
-      }
-      throw err;
-    }
+    const buckets = await SqliteHandle(this.bucketRepo, async (repo) => {
+      return await repo.find();
+    });
+    return buckets.map((data) => data.name);
   }
 }

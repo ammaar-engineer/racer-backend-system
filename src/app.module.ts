@@ -4,6 +4,7 @@ import { SnippetsRouteModule } from './snippets_route/module';
 import { MainDBModule } from './app_modules/main.db.module';
 import { MinIOModule } from './app_modules/minio.module';
 import { BucketsModule } from './buckets_route/module';
+import { FilesRouteModule } from './files_route/module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { BucketsModule } from './buckets_route/module';
     MainDBModule,
     MinIOModule,
     SnippetsRouteModule,
-    BucketsModule
+    BucketsModule,
+    FilesRouteModule
   ],
   providers: [],
 })

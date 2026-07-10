@@ -7,7 +7,7 @@ import { BucketsValidation } from '../validation/buckets_validation';
 import { MinIOModule } from '../app_modules/minio.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Buckets, Files]), MinIOModule],
+  imports: [TypeOrmModule.forFeature([Buckets, Files])],
   controllers: [BucketsController],
   providers: [BucketsService, BucketsValidation],
   exports: [BucketsService]

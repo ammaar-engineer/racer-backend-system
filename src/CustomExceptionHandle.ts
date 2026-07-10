@@ -6,49 +6,49 @@ export class BaseException extends Error {
     public readonly errorCode: string,
     public readonly success: boolean
   ) {
-    super(message)
-    this.name = this.constructor.name
+    super(message);
+    this.name = this.constructor.name;
   }
 }
 
 export class BadRequestException extends BaseException {
   constructor(message: string) {
-    super(message, 400, null, "BAD_REQUEST", false)
+    super(message, 400, null, 'BAD_REQUEST', false);
   }
 }
 
 export class UnauthorizedException extends BaseException {
   constructor(message: string) {
-    super(message, 401, null, "UNAUTHORIZED", false)
+    super(message, 401, null, 'UNAUTHORIZED', false);
   }
 }
 
 export class ForbiddenException extends BaseException {
   constructor(message: string) {
-    super(message, 403, null, "FORBIDDEN", false)
+    super(message, 403, null, 'FORBIDDEN', false);
   }
 }
 
 export class NotFoundException extends BaseException {
   constructor(message: string) {
-    super(message, 404, null, "NOT_FOUND", false)
+    super(message, 404, null, 'NOT_FOUND', false);
   }
 }
 
 export class ConflictException extends BaseException {
   constructor(message: string) {
-    super(message, 409, null, "CONFLICT", false)
+    super(message, 409, null, 'CONFLICT', false);
   }
 }
 
 export class UnprocessableEntityException extends BaseException {
   constructor(message: string) {
-    super(message, 422, null, "UNPROCESSABLE_ENTITY", false)
+    super(message, 422, null, 'UNPROCESSABLE_ENTITY', false);
   }
 }
 
 export class InternalServerErrorException extends BaseException {
   constructor(message: string) {
-    super(message, 500, null, "INTERNAL_SERVER_ERROR", false)
+    super(message, 500, null, 'INTERNAL_SERVER_ERROR', false);
   }
 }

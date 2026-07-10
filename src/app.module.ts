@@ -7,7 +7,7 @@ import { BucketsModule } from './buckets_route/module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     MainDBModule,
     MinIOModule,
     SnippetsRouteModule,

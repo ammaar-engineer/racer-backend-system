@@ -1,9 +1,10 @@
 import * as Minio from 'minio';
 import { Module, Global } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Global()
 @Module({
+  imports: [ConfigModule],
   providers: [
     {
       provide: 'MINIO_CLIENT',

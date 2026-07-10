@@ -8,6 +8,7 @@ import type { Request } from "express";
 
 export class FileRouteServices {
   private BucketValidation = BucketsValidationCheck;
+  
 
   async uploadFile(
     req: Request,
@@ -105,7 +106,6 @@ export class FileRouteServices {
   }
 
   async deleteFile(fileName: string, bucketName: string) {
-    console.log("Jalan")
     const bucketRepo = main_db.getRepository(Buckets);
     const fileRepo = main_db.getRepository(Files);
     
@@ -118,13 +118,11 @@ export class FileRouteServices {
       }
     });
 
-    console.log(file)
-
     if (!file) {
       ErrorTypeCall.notFound('File not found');
     }
-
-    await MinIOClient.removeObject(bucketName, fileName);
+    
+    await MinIOClient.removeObject(bucketName, fileName); 
     
     await SqliteHandle(fileRepo, async (repo) => {
       await repo.delete({name: file?.name});

@@ -8,6 +8,13 @@ import { bucket } from "./route/bucket.js";
 import { Buckets, Files, Snippets } from "./entity.js";
 import { snippet } from "./route/snippet.js";
 import { EnvVariable } from './utilities/envStatus.js';
+import path from 'path';
+import os from 'os'
+import fs from 'fs'
+import { SnippetErrorTest, SnippetRouteTest } from './testing/snippet.route.test.js';
+import { FileErrorTest, FileRouteTest } from './testing/file.route.test.js';
+import { BucketErrorTest, BucketRouteTest } from './testing/bucket.route.test.js';
+
 // Storage / Database
 export const main_db = new DataSource({
   type: "better-sqlite3",
@@ -17,13 +24,19 @@ export const main_db = new DataSource({
 });
 await main_db.initialize();
 export const MinIOClient = new Client({
-  endPoint: 'localhost',
-  port: 9000,
+  endPoint: process.env.HOST_MINIO as string,
+  port: 80,
   useSSL: false,
-  accessKey: 'minioadmin',
-  secretKey: 'minioadmin123',
+  accessKey: process.env.MINIO_ACCESS_KEY as string,
+  secretKey: process.env.MINIO_SECRET_KEY as string,
   region: 'us-east-1'
 })
+
+// Opsi sertifikat kalo mau SSH
+const option = {
+  key: fs.readFileSync(path.join(os.homedir(), 'localCert', 'localhost+2-key.pem')),
+  cert: fs.readFileSync(path.join(os.homedir(), 'localCert', 'localhost+2.pem'))
+}
 
 // Application / Routes
 const app = express();
@@ -36,9 +49,26 @@ app.use('/file', file);
 app.use('/bucket', bucket);
 app.use('/snippet', snippet)
 
+// Snippet test
+// SnippetRouteTest(app)
+// SnippetErrorTest(app)
+
+// File test
+// FileRouteTest(app)
+// FileErrorTest(app)
+
+// Bucket test
+// BucketRouteTest(app)
+// BucketErrorTest(app)
+
 
 app.use(ErrorMiddleware());
 
 app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
-});
+  console.log(`Now server running`)
+})
+
+// Untuk set ke https
+// https.createServer(option, app).listen(3000, () => {
+//   console.log("Server listening now")
+// })

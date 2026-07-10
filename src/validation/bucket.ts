@@ -25,7 +25,7 @@ export class BucketsValidationCheck {
     bucketName: string
   ) {
     const existingBucket = await bucketRepo.findOne({ where: { name: bucketName } });
-    
+
     if (existingBucket) {
       ErrorTypeCall.conflict('Bucket already exists');
     }

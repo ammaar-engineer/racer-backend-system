@@ -118,8 +118,6 @@ export class BucketRouteServices {
     })
 
     return {bucketName, deletedFiles: objectsToDelete}
-
-    // Delete all file records from database
   }
   async bucketList() {
     const bucketRepo = main_db.getRepository(Buckets)

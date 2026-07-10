@@ -4,8 +4,6 @@ import { SnippesServicesModule } from "./services";
 
 @Module({
   controllers: [SnippetsController],
-  imports: [
-    SnippesServicesModule
-  ]
+  imports: [SnippesServicesModule]
 })
 export class SnippetsRouteModule { }

@@ -3,15 +3,14 @@ import { SnippetsServices } from './services';
 import { SnippetObject } from './dto';
 import { SuccessResponse } from 'src/utilities/Success.Response';
 
-@Controller('snippet')
+@Controller('snippets')
 export class SnippetsController {
   constructor(
     private snippetsServices: SnippetsServices
   ) { }
 
-  @Get('lists')
+  @Get('list')
   async getAllSnippets() {
-    console.log("Fetched")
     const data = await this.snippetsServices.getSnippetsList()
     return SuccessResponse("Snippets user", data)
   }
